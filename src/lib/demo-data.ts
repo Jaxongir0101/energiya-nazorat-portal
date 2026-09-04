@@ -6,6 +6,7 @@ import type {
   DebtType,
   Employee,
   PaymentType,
+  Sector,
   Territory,
 } from "./types";
 
@@ -142,6 +143,7 @@ export const adminUser: Employee = {
   role: "super_admin",
   position: "Viloyat boshqarmasi rahbari",
   territory_id: "t01",
+  sector: "elektr",
   status: "faol",
   created_at: "2026-07-20T09:00:00",
 };
@@ -155,6 +157,7 @@ export const supervisorUser: Employee = {
   role: "nazoratchi",
   position: "Monitoring bo'limi boshlig'i",
   territory_id: "t01",
+  sector: "elektr",
   status: "faol",
   created_at: "2026-07-20T09:00:00",
 };
@@ -226,33 +229,38 @@ const STREETS = [
 
 export const companies: Company[] = [];
 let cIdx = 0;
-territories.forEach((t) => {
-  const count = t.id === "t01" ? 8 : Math.round(between(4, 6));
-  for (let i = 0; i < count; i++) {
-    cIdx++;
-    const base = NAME_A[(cIdx * 7) % NAME_A.length];
-    const withSuffix = rnd() > 0.55 ? ` ${pick(SUFFIX)}` : "";
-    const debt_type: DebtType = rnd() > 0.63 ? "umidsiz" : "harakatdagi";
-    const initial = Math.round(between(85, 1650)) * 1_000_000;
-    const emps = employees.filter((e) => e.territory_id === t.id);
-    const first = FIRST[(cIdx * 5) % FIRST.length];
-    const last = LAST[(cIdx * 11) % LAST.length];
-    companies.push({
-      id: `c${String(cIdx).padStart(3, "0")}`,
-      name: `"${base}${withSuffix}" ${pick(NAME_B)}`,
-      stir: "0",
-      director_name: `${last} ${first}`,
-      phone: `+998 ${pick(["72", "90", "91", "93"])} ${Math.floor(between(200, 999))}-${Math.floor(between(10, 99))}-${Math.floor(between(10, 99))}`,
-      address: `${t.name}, ${pick(STREETS)}, ${Math.floor(between(1, 120))}-uy`,
-      territory_id: t.id,
-      responsible_employee_id: emps[i % 2]!.id,
-      debt_type,
-      initial_debt: initial,
-      created_at: "2026-07-28T10:00:00",
-      updated_at: "2026-08-01T10:00:00",
-    });
-  }
+SECTORS.forEach((sector) => {
+  territories.forEach((t) => {
+    const count = t.id === "t01" ? 8 : Math.round(between(4, 6));
+    for (let i = 0; i < count; i++) {
+      cIdx++;
+      const base = NAME_A[(cIdx * 7) % NAME_A.length];
+      const withSuffix = rnd() > 0.55 ? ` ${pick(SUFFIX)}` : "";
+      const debt_type: DebtType = rnd() > 0.63 ? "umidsiz" : "harakatdagi";
+      const initial = Math.round(between(85, 1650)) * 1_000_000;
+      const emps = employees.filter((e) => e.territory_id === t.id && e.sector === sector);
+      const first = FIRST[(cIdx * 5) % FIRST.length];
+      const last = LAST[(cIdx * 11) % LAST.length];
+      companies.push({
+        id: `${sector === "gaz" ? "g" : "c"}${String(cIdx).padStart(3, "0")}`,
+        name: `"${base}${withSuffix}" ${pick(NAME_B)}`,
+        stir: "0",
+        director_name: `${last} ${first}`,
+        phone: `+998 ${pick(["72", "90", "91", "93"])} ${Math.floor(between(200, 999))}-${Math.floor(between(10, 99))}-${Math.floor(between(10, 99))}`,
+        address: `${t.name}, ${pick(STREETS)}, ${Math.floor(between(1, 120))}-uy`,
+        territory_id: t.id,
+        sector,
+        responsible_employee_id: emps[i % 2]!.id,
+        debt_type,
+        initial_debt: initial,
+        created_at: "2026-07-28T10:00:00",
+        updated_at: "2026-08-01T10:00:00",
+      });
+    }
+  });
 });
+
+export const companiesOf = (sector: Sector) => companies.filter((c) => c.sector === sector);
 
 const PAYMENT_TYPES: PaymentType[] = [
   "pul_kochirish",
