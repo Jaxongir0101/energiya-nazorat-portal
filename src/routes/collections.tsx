@@ -14,8 +14,8 @@ import { fmtDateTime, fmtNumber, fmtSom, toISODate } from "@/lib/format";
 import { DEBT_TYPE_LABEL, PAYMENT_TYPE_LABEL } from "@/lib/types";
 
 export const Route = createFileRoute("/collections")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    period: typeof s.period === "string" ? s.period : "all",
+  validateSearch: (s: Record<string, unknown>): { period?: string } => ({
+    period: typeof s["period"] === "string" ? (s["period"] as string) : "all",
   }),
   head: () => ({
     meta: [

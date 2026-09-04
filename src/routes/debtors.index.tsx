@@ -13,8 +13,8 @@ import { totalsOf, type CompanyRow } from "@/lib/derive";
 import { DEBT_TYPE_LABEL, STATUS_LABEL, type CompanyStatus, type DebtType } from "@/lib/types";
 
 export const Route = createFileRoute("/debtors/")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    type: typeof s.type === "string" ? s.type : "all",
+  validateSearch: (s: Record<string, unknown>): { type?: string } => ({
+    type: typeof s["type"] === "string" ? (s["type"] as string) : "all",
   }),
   head: () => ({
     meta: [

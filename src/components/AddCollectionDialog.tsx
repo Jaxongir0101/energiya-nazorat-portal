@@ -25,7 +25,7 @@ export function AddCollectionDialog({ companyId }: { companyId?: string }) {
   const [comment, setComment] = useState("");
   const [doc, setDoc] = useState<string | null>(null);
   const [employee, setEmployee] = useState(
-    role === "masul" ? currentUser.id : (rows[0]?.responsible_employee_id ?? employees[0].id),
+    role === "masul" ? currentUser.id : (rows[0]?.responsible_employee_id ?? employees[0]!.id),
   );
 
   const submit = () => {
