@@ -81,14 +81,13 @@ function Dashboard() {
 
     const list = empBase.map((e) => ({ ...e, amount: map.get(e.employee.id) ?? 0 }));
     if (sortBy === "kam") list.sort((a, b) => a.amount - b.amount);
-    else if (sortBy === "hudud")
-      list.sort((a, b) => a.territory.name.localeCompare(b.territory.name, "uz"));
     else list.sort((a, b) => b.amount - a.amount);
     return list.slice(0, 8);
   }, [collections, filteredRows, empBase, period, sortBy]);
 
-  const maxAmount = Math.max(1, ...empChart.map((e) => e.amount));
-  const terrStats = territoryStats(filteredRows).slice(0, 8);
+  const terrStats = territoryStats(filteredRows);
+  const terrMax = Math.max(1, ...terrStats.map((s) => s.initial));
+
 
   const recent = useMemo(() => {
     const ids = new Set(filteredRows.map((r) => r.id));
