@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DebtorsIndexRouteImport } from './routes/debtors.index'
 import { Route as DebtorsIdRouteImport } from './routes/debtors.$id'
 import { Route as EmployeesIndexRouteImport } from './routes/employees.index'
+import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as TerritoriesIndexRouteImport } from './routes/territories.index'
 import { Route as TerritoriesIdRouteImport } from './routes/territories.$id'
 
@@ -36,6 +37,11 @@ const EmployeesIndexRoute = EmployeesIndexRouteImport.update({
   path: '/employees/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmployeesIdRoute = EmployeesIdRouteImport.update({
+  id: '/employees/$id',
+  path: '/employees/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TerritoriesIndexRoute = TerritoriesIndexRouteImport.update({
   id: '/territories/',
   path: '/territories/',
@@ -50,6 +56,7 @@ const TerritoriesIdRoute = TerritoriesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/debtors/$id': typeof DebtorsIdRoute
+  '/employees/$id': typeof EmployeesIdRoute
   '/territories/$id': typeof TerritoriesIdRoute
   '/debtors/': typeof DebtorsIndexRoute
   '/employees/': typeof EmployeesIndexRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/debtors/$id': typeof DebtorsIdRoute
+  '/employees/$id': typeof EmployeesIdRoute
   '/territories/$id': typeof TerritoriesIdRoute
   '/debtors': typeof DebtorsIndexRoute
   '/employees': typeof EmployeesIndexRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/debtors/$id': typeof DebtorsIdRoute
+  '/employees/$id': typeof EmployeesIdRoute
   '/territories/$id': typeof TerritoriesIdRoute
   '/debtors/': typeof DebtorsIndexRoute
   '/employees/': typeof EmployeesIndexRoute
@@ -77,6 +86,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/debtors/$id'
+    | '/employees/$id'
     | '/territories/$id'
     | '/debtors/'
     | '/employees/'
@@ -85,6 +95,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/debtors/$id'
+    | '/employees/$id'
     | '/territories/$id'
     | '/debtors'
     | '/employees'
@@ -93,6 +104,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/debtors/$id'
+    | '/employees/$id'
     | '/territories/$id'
     | '/debtors/'
     | '/employees/'
@@ -102,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DebtorsIdRoute: typeof DebtorsIdRoute
+  EmployeesIdRoute: typeof EmployeesIdRoute
   TerritoriesIdRoute: typeof TerritoriesIdRoute
   DebtorsIndexRoute: typeof DebtorsIndexRoute
   EmployeesIndexRoute: typeof EmployeesIndexRoute
@@ -138,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmployeesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/employees/$id': {
+      id: '/employees/$id'
+      path: '/employees/$id'
+      fullPath: '/employees/$id'
+      preLoaderRoute: typeof EmployeesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/territories/': {
       id: '/territories/'
       path: '/territories'
@@ -158,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DebtorsIdRoute: DebtorsIdRoute,
+  EmployeesIdRoute: EmployeesIdRoute,
   TerritoriesIdRoute: TerritoriesIdRoute,
   DebtorsIndexRoute: DebtorsIndexRoute,
   EmployeesIndexRoute: EmployeesIndexRoute,
