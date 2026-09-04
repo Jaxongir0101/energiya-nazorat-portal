@@ -7,7 +7,7 @@ import { Progress } from "@/components/Badges";
 import { ExportMenu } from "@/components/ExportMenu";
 import { useApp } from "@/lib/store";
 import { territoryStats, totalsOf, type TerritoryStat } from "@/lib/derive";
-import { fmtNumber, fmtShort, fmtSom } from "@/lib/format";
+import { fmtNumber, fmtSom } from "@/lib/format";
 
 export const Route = createFileRoute("/territories/")({
   head: () => ({
@@ -32,7 +32,6 @@ function TerritoriesPage() {
   const go = useGo();
   const stats = territoryStats(filteredRows);
   const t = totalsOf(filteredRows);
-  const max = Math.max(1, ...stats.map((s) => s.initial));
 
   const columns: Column<TerritoryStat>[] = [
     {
@@ -154,39 +153,6 @@ function TerritoriesPage() {
       }
     >
       <GlobalFilters />
-
-      <section className="card-surface p-5">
-        <h2 className="text-[15px] font-semibold tracking-tight">
-          Qarzdorlik va undirish taqsimoti
-        </h2>
-        <div className="mt-4 space-y-3">
-          {stats.map((s) => (
-            <button
-              key={s.territory.id}
-              type="button"
-              onClick={() => go(`/territories/${s.territory.id}`)}
-              className="block w-full text-left"
-            >
-              <div className="mb-1 flex justify-between text-[12px]">
-                <span className="font-medium">{s.territory.name}</span>
-                <span className="font-mono tnum text-muted-foreground">
-                  {fmtShort(s.total)} / {fmtShort(s.initial)}
-                </span>
-              </div>
-              <div className="relative h-5 overflow-hidden rounded-md bg-muted">
-                <div
-                  className="absolute inset-y-0 left-0 rounded-md bg-brand/25"
-                  style={{ width: `${(s.initial / max) * 100}%` }}
-                />
-                <div
-                  className="bar-grow absolute inset-y-0 left-0 rounded-md bg-accent"
-                  style={{ width: `${((s.total / max) * 100).toFixed(2)}%` }}
-                />
-              </div>
-            </button>
-          ))}
-        </div>
-      </section>
 
       <DataTable
         rows={stats}
