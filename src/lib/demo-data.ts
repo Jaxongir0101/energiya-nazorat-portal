@@ -103,27 +103,35 @@ function femaleName(n: string) {
   return ["Nodira", "Shahnoza", "Zilola", "Kamola", "Gulnora", "Aziza", "Malika"].includes(n);
 }
 
+export const SECTORS: Sector[] = ["elektr", "gaz"];
+
 export const employees: Employee[] = [];
-territories.forEach((t, ti) => {
-  for (let k = 0; k < 2; k++) {
-    const idx = ti * 2 + k;
-    const first = FIRST[idx % FIRST.length]!;
-    let last = LAST[(idx * 3 + 1) % LAST.length]!;
-    if (femaleName(first)) last = last.replace(/ov$/, "ova").replace(/ev$/, "eva");
-    employees.push({
-      id: `e${String(idx + 1).padStart(2, "0")}`,
-      full_name: `${last} ${first}`,
-      short_name: `${first.slice(0, 1)}. ${last}`,
-      phone: `+998 ${pick(["90", "91", "93", "94", "97", "99"])} ${Math.floor(between(200, 999))}-${Math.floor(between(10, 99))}-${Math.floor(between(10, 99))}`,
-      email: `${last.toLowerCase().replace(/[^a-z]/g, "")}.${idx + 1}@energiya.uz`,
-      role: "masul",
-      position: k === 0 ? "Yetakchi mutaxassis" : "Bosh mutaxassis",
-      territory_id: t.id,
-      status: "faol",
-      created_at: "2026-07-25T09:00:00",
-    });
-  }
+SECTORS.forEach((sector, si) => {
+  territories.forEach((t, ti) => {
+    for (let k = 0; k < 2; k++) {
+      const idx = ti * 2 + k;
+      const nameIdx = idx + si * 7;
+      const first = FIRST[nameIdx % FIRST.length]!;
+      let last = LAST[(nameIdx * 3 + 1) % LAST.length]!;
+      if (femaleName(first)) last = last.replace(/ov$/, "ova").replace(/ev$/, "eva");
+      employees.push({
+        id: `${sector === "gaz" ? "g" : "e"}${String(idx + 1).padStart(2, "0")}`,
+        full_name: `${last} ${first}`,
+        short_name: `${first.slice(0, 1)}. ${last}`,
+        phone: `+998 ${pick(["90", "91", "93", "94", "97", "99"])} ${Math.floor(between(200, 999))}-${Math.floor(between(10, 99))}-${Math.floor(between(10, 99))}`,
+        email: `${last.toLowerCase().replace(/[^a-z]/g, "")}.${idx + 1}@${sector === "gaz" ? "gaz" : "energiya"}.uz`,
+        role: "masul",
+        position: k === 0 ? "Yetakchi mutaxassis" : "Bosh mutaxassis",
+        territory_id: t.id,
+        sector,
+        status: "faol",
+        created_at: "2026-07-25T09:00:00",
+      });
+    }
+  });
 });
+
+export const employeesOf = (sector: Sector) => employees.filter((e) => e.sector === sector);
 
 export const adminUser: Employee = {
   id: "u00",
