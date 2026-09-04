@@ -33,7 +33,7 @@ export interface GlobalFilter {
 
 const CAMPAIGN_RANGE: DateRange = { from: toISODate(CAMPAIGN_START), to: toISODate(TODAY) };
 
-export function rangeFor(quick: QuickRange, current: DateRange): DateRange {
+function rangeFor(quick: QuickRange, current: DateRange): DateRange {
   const today = toISODate(TODAY);
   switch (quick) {
     case "bugun":
