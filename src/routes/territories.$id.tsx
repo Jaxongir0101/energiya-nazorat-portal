@@ -7,7 +7,7 @@ import { DataTable, type Column } from "@/components/DataTable";
 import { DebtTypeBadge, Progress, StatusBadge } from "@/components/Badges";
 import { ExportMenu } from "@/components/ExportMenu";
 import { useApp } from "@/lib/store";
-import { employees, territories } from "@/lib/demo-data";
+import { territories } from "@/lib/demo-data";
 import { employeeStats, totalsOf, type CompanyRow } from "@/lib/derive";
 import { fmtNumber, fmtPct, fmtShort, fmtSom } from "@/lib/format";
 import { DEBT_TYPE_LABEL } from "@/lib/types";
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/territories/$id")({
 
 function TerritoryDetail() {
   const { id } = Route.useParams();
-  const { rows } = useApp();
+  const { rows, sectorEmployees } = useApp();
   const go = useGo();
   const territory = territories.find((t) => t.id === id);
 
@@ -47,7 +47,7 @@ function TerritoryDetail() {
   const list = rows.filter((r) => r.territory_id === territory.id);
   const t = totalsOf(list);
   const emps = employeeStats(list).filter((e) =>
-    employees.some((x) => x.id === e.employee.id && x.territory_id === territory.id),
+    sectorEmployees.some((x) => x.id === e.employee.id && x.territory_id === territory.id),
   );
 
   const columns: Column<CompanyRow>[] = [

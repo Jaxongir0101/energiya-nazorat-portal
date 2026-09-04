@@ -6,6 +6,7 @@ import type {
   DebtType,
   Employee,
   PaymentType,
+  Sector,
   Territory,
 } from "./types";
 
@@ -103,27 +104,35 @@ function femaleName(n: string) {
   return ["Nodira", "Shahnoza", "Zilola", "Kamola", "Gulnora", "Aziza", "Malika"].includes(n);
 }
 
+export const SECTORS: Sector[] = ["elektr", "gaz"];
+
 export const employees: Employee[] = [];
-territories.forEach((t, ti) => {
-  for (let k = 0; k < 2; k++) {
-    const idx = ti * 2 + k;
-    const first = FIRST[idx % FIRST.length]!;
-    let last = LAST[(idx * 3 + 1) % LAST.length]!;
-    if (femaleName(first)) last = last.replace(/ov$/, "ova").replace(/ev$/, "eva");
-    employees.push({
-      id: `e${String(idx + 1).padStart(2, "0")}`,
-      full_name: `${last} ${first}`,
-      short_name: `${first.slice(0, 1)}. ${last}`,
-      phone: `+998 ${pick(["90", "91", "93", "94", "97", "99"])} ${Math.floor(between(200, 999))}-${Math.floor(between(10, 99))}-${Math.floor(between(10, 99))}`,
-      email: `${last.toLowerCase().replace(/[^a-z]/g, "")}.${idx + 1}@energiya.uz`,
-      role: "masul",
-      position: k === 0 ? "Yetakchi mutaxassis" : "Bosh mutaxassis",
-      territory_id: t.id,
-      status: "faol",
-      created_at: "2026-07-25T09:00:00",
-    });
-  }
+SECTORS.forEach((sector, si) => {
+  territories.forEach((t, ti) => {
+    for (let k = 0; k < 2; k++) {
+      const idx = ti * 2 + k;
+      const nameIdx = idx + si * 7;
+      const first = FIRST[nameIdx % FIRST.length]!;
+      let last = LAST[(nameIdx * 3 + 1) % LAST.length]!;
+      if (femaleName(first)) last = last.replace(/ov$/, "ova").replace(/ev$/, "eva");
+      employees.push({
+        id: `${sector === "gaz" ? "g" : "e"}${String(idx + 1).padStart(2, "0")}`,
+        full_name: `${last} ${first}`,
+        short_name: `${first.slice(0, 1)}. ${last}`,
+        phone: `+998 ${pick(["90", "91", "93", "94", "97", "99"])} ${Math.floor(between(200, 999))}-${Math.floor(between(10, 99))}-${Math.floor(between(10, 99))}`,
+        email: `${last.toLowerCase().replace(/[^a-z]/g, "")}.${idx + 1}@${sector === "gaz" ? "gaz" : "energiya"}.uz`,
+        role: "masul",
+        position: k === 0 ? "Yetakchi mutaxassis" : "Bosh mutaxassis",
+        territory_id: t.id,
+        sector,
+        status: "faol",
+        created_at: "2026-07-25T09:00:00",
+      });
+    }
+  });
 });
+
+export const employeesOf = (sector: Sector) => employees.filter((e) => e.sector === sector);
 
 export const adminUser: Employee = {
   id: "u00",
@@ -134,6 +143,7 @@ export const adminUser: Employee = {
   role: "super_admin",
   position: "Viloyat boshqarmasi rahbari",
   territory_id: "t01",
+  sector: "elektr",
   status: "faol",
   created_at: "2026-07-20T09:00:00",
 };
@@ -147,6 +157,7 @@ export const supervisorUser: Employee = {
   role: "nazoratchi",
   position: "Monitoring bo'limi boshlig'i",
   territory_id: "t01",
+  sector: "elektr",
   status: "faol",
   created_at: "2026-07-20T09:00:00",
 };
@@ -218,33 +229,38 @@ const STREETS = [
 
 export const companies: Company[] = [];
 let cIdx = 0;
-territories.forEach((t) => {
-  const count = t.id === "t01" ? 8 : Math.round(between(4, 6));
-  for (let i = 0; i < count; i++) {
-    cIdx++;
-    const base = NAME_A[(cIdx * 7) % NAME_A.length];
-    const withSuffix = rnd() > 0.55 ? ` ${pick(SUFFIX)}` : "";
-    const debt_type: DebtType = rnd() > 0.63 ? "umidsiz" : "harakatdagi";
-    const initial = Math.round(between(85, 1650)) * 1_000_000;
-    const emps = employees.filter((e) => e.territory_id === t.id);
-    const first = FIRST[(cIdx * 5) % FIRST.length];
-    const last = LAST[(cIdx * 11) % LAST.length];
-    companies.push({
-      id: `c${String(cIdx).padStart(3, "0")}`,
-      name: `"${base}${withSuffix}" ${pick(NAME_B)}`,
-      stir: "0",
-      director_name: `${last} ${first}`,
-      phone: `+998 ${pick(["72", "90", "91", "93"])} ${Math.floor(between(200, 999))}-${Math.floor(between(10, 99))}-${Math.floor(between(10, 99))}`,
-      address: `${t.name}, ${pick(STREETS)}, ${Math.floor(between(1, 120))}-uy`,
-      territory_id: t.id,
-      responsible_employee_id: emps[i % 2]!.id,
-      debt_type,
-      initial_debt: initial,
-      created_at: "2026-07-28T10:00:00",
-      updated_at: "2026-08-01T10:00:00",
-    });
-  }
+SECTORS.forEach((sector) => {
+  territories.forEach((t) => {
+    const count = t.id === "t01" ? 8 : Math.round(between(4, 6));
+    for (let i = 0; i < count; i++) {
+      cIdx++;
+      const base = NAME_A[(cIdx * 7) % NAME_A.length];
+      const withSuffix = rnd() > 0.55 ? ` ${pick(SUFFIX)}` : "";
+      const debt_type: DebtType = rnd() > 0.63 ? "umidsiz" : "harakatdagi";
+      const initial = Math.round(between(85, 1650)) * 1_000_000;
+      const emps = employees.filter((e) => e.territory_id === t.id && e.sector === sector);
+      const first = FIRST[(cIdx * 5) % FIRST.length];
+      const last = LAST[(cIdx * 11) % LAST.length];
+      companies.push({
+        id: `${sector === "gaz" ? "g" : "c"}${String(cIdx).padStart(3, "0")}`,
+        name: `"${base}${withSuffix}" ${pick(NAME_B)}`,
+        stir: "0",
+        director_name: `${last} ${first}`,
+        phone: `+998 ${pick(["72", "90", "91", "93"])} ${Math.floor(between(200, 999))}-${Math.floor(between(10, 99))}-${Math.floor(between(10, 99))}`,
+        address: `${t.name}, ${pick(STREETS)}, ${Math.floor(between(1, 120))}-uy`,
+        territory_id: t.id,
+        sector,
+        responsible_employee_id: emps[i % 2]!.id,
+        debt_type,
+        initial_debt: initial,
+        created_at: "2026-07-28T10:00:00",
+        updated_at: "2026-08-01T10:00:00",
+      });
+    }
+  });
 });
+
+export const companiesOf = (sector: Sector) => companies.filter((c) => c.sector === sector);
 
 const PAYMENT_TYPES: PaymentType[] = [
   "pul_kochirish",

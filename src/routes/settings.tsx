@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { Panel } from "@/components/Kpi";
 import { useApp } from "@/lib/store";
-import { CAMPAIGN_START, TODAY, territories, employees, companies } from "@/lib/demo-data";
+import { CAMPAIGN_START, TODAY, territories } from "@/lib/demo-data";
 import { fmtDate, fmtNumber } from "@/lib/format";
 import { ROLE_LABEL, type Role } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/settings")({
 });
 
 function SettingsPage() {
-  const { role, setRole, collections } = useApp();
+  const { role, setRole, collections, sectorEmployees, rows } = useApp();
 
   return (
     <AppShell
@@ -39,8 +39,8 @@ function SettingsPage() {
           <Item label="Tadbir boshlanishi" value={fmtDate(CAMPAIGN_START.toISOString())} />
           <Item label="Joriy sana" value={fmtDate(TODAY.toISOString())} />
           <Item label="Hududlar" value={`${territories.length} ta`} />
-          <Item label="Mas'ul xodimlar" value={`${employees.length} ta`} />
-          <Item label="Qarzdor korxonalar" value={`${companies.length} ta`} />
+          <Item label="Mas'ul xodimlar" value={`${sectorEmployees.length} ta`} />
+          <Item label="Qarzdor korxonalar" value={`${rows.length} ta`} />
           <Item label="Undirish yozuvlari" value={`${fmtNumber(collections.length)} ta`} />
           <Item label="Valyuta" value="so'm (UZS)" />
           <Item label="Interfeys tili" value="O'zbek (lotin)" />

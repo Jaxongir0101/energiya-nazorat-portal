@@ -1,7 +1,7 @@
 import { CalendarRange, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp, type QuickRange } from "@/lib/store";
-import { employees, territories } from "@/lib/demo-data";
+import { territories } from "@/lib/demo-data";
 import type { DebtType } from "@/lib/types";
 import {
   Popover,
@@ -18,7 +18,7 @@ const QUICK: { key: QuickRange; label: string }[] = [
 ];
 
 export function GlobalFilters() {
-  const { filter, setFilter, resetFilter } = useApp();
+  const { filter, setFilter, resetFilter, sectorEmployees } = useApp();
 
   return (
     <div className="no-print flex flex-wrap items-center gap-1.5">
@@ -97,7 +97,7 @@ export function GlobalFilters() {
         className="h-8 rounded-md border border-border bg-card px-2 text-[12px] outline-none focus:ring-2 focus:ring-ring"
       >
         <option value="all">Barcha mas'ullar</option>
-        {employees.map((e) => (
+        {sectorEmployees.map((e) => (
           <option key={e.id} value={e.id}>
             {e.full_name}
           </option>

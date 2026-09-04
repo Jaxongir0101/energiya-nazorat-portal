@@ -5,6 +5,7 @@ import {
   Building2,
   ChevronRight,
   FileBarChart2,
+  Flame,
   LayoutDashboard,
   LogOut,
   Map,
@@ -15,6 +16,7 @@ import {
   UserCog,
   Users,
   Wallet,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/store";
@@ -263,6 +265,8 @@ export function AppShell({
               ))}
             </nav>
 
+            <SectorSwitch />
+
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <h1 className="text-balance text-xl font-semibold leading-tight">{title}</h1>
@@ -281,7 +285,40 @@ export function AppShell({
   );
 }
 
+function SectorSwitch() {
+  const { sector, setSector } = useApp();
+  const items: { key: "elektr" | "gaz"; label: string; icon: typeof Zap }[] = [
+    { key: "elektr", label: "ELEKTR", icon: Zap },
+    { key: "gaz", label: "GAZ", icon: Flame },
+  ];
+  return (
+    <div className="no-print inline-flex rounded-xl bg-muted p-1 ring-1 ring-border">
+      {items.map((it) => {
+        const Icon = it.icon;
+        const active = sector === it.key;
+        return (
+          <button
+            key={it.key}
+            type="button"
+            onClick={() => setSector(it.key)}
+            className={cn(
+              "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-[13px] font-semibold tracking-wide transition-colors",
+              active
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <Icon className="size-4" />
+            {it.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function GlobalSearch() {
+  const { sector } = useApp();
   const [q, setQ] = useState("");
   const navigate = useNavigate();
 
@@ -289,20 +326,24 @@ function GlobalSearch() {
     const term = q.trim().toLowerCase();
     if (term.length < 2) return [];
     const out: { label: string; hint: string; to: string }[] = [];
-    companies.forEach((c) => {
-      if (c.name.toLowerCase().includes(term) || c.stir.includes(term))
-        out.push({ label: c.name, hint: `STIR ${c.stir}`, to: `/debtors/${c.id}` });
-    });
-    employees.forEach((e) => {
-      if (e.full_name.toLowerCase().includes(term))
-        out.push({ label: e.full_name, hint: "Mas'ul xodim", to: `/employees/${e.id}` });
-    });
+    companies
+      .filter((c) => c.sector === sector)
+      .forEach((c) => {
+        if (c.name.toLowerCase().includes(term) || c.stir.includes(term))
+          out.push({ label: c.name, hint: `STIR ${c.stir}`, to: `/debtors/${c.id}` });
+      });
+    employees
+      .filter((e) => e.sector === sector)
+      .forEach((e) => {
+        if (e.full_name.toLowerCase().includes(term))
+          out.push({ label: e.full_name, hint: "Mas'ul xodim", to: `/employees/${e.id}` });
+      });
     territories.forEach((t) => {
       if (t.name.toLowerCase().includes(term))
         out.push({ label: t.name, hint: "Hudud", to: `/territories/${t.id}` });
     });
     return out.slice(0, 8);
-  }, [q]);
+  }, [q, sector]);
 
   return (
     <div className="relative min-w-[200px] flex-1 md:max-w-md">

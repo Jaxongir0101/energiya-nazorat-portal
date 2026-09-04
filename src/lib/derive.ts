@@ -1,6 +1,6 @@
 import { companies, employees, territories, TODAY } from "./demo-data";
 import { pct } from "./format";
-import type { Collection, Company, CompanyStatus, Employee, Territory } from "./types";
+import type { Collection, Company, CompanyStatus, Employee, Sector, Territory } from "./types";
 
 export interface CompanyRow extends Company {
   territory: Territory;
@@ -147,8 +147,12 @@ export interface EmployeeStat {
   efficiency: number;
 }
 
-export function employeeStats(rows: CompanyRow[]): EmployeeStat[] {
-  return employees
+export function employeeStats(rows: CompanyRow[], sector?: Sector): EmployeeStat[] {
+  const present = new Set(rows.map((r) => r.sector));
+  const list = employees.filter((e) =>
+    sector ? e.sector === sector : present.size ? present.has(e.sector) : true,
+  );
+  return list
     .map((e) => {
       const mine = rows.filter((r) => r.responsible_employee_id === e.id);
       const t = totalsOf(mine);

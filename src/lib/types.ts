@@ -1,5 +1,7 @@
 export type Role = "super_admin" | "nazoratchi" | "masul";
 
+export type Sector = "elektr" | "gaz";
+
 export type DebtType = "umidsiz" | "harakatdagi";
 
 export type CompanyStatus = "undirilmoqda" | "qisman" | "toliq" | "ozgarishsiz";
@@ -21,6 +23,7 @@ export interface Employee {
   role: Role;
   position: string;
   territory_id: string;
+  sector: Sector;
   status: "faol" | "nofaol";
   created_at: string;
 }
@@ -33,6 +36,7 @@ export interface Company {
   phone: string;
   address: string;
   territory_id: string;
+  sector: Sector;
   responsible_employee_id: string;
   debt_type: DebtType;
   initial_debt: number;
@@ -92,6 +96,11 @@ export const PAYMENT_TYPE_LABEL: Record<PaymentType, string> = {
   ozaro_hisob: "O'zaro hisob-kitob",
   sud_qarori: "Sud qarori asosida",
   boshqa: "Boshqa",
+};
+
+export const SECTOR_LABEL: Record<Sector, string> = {
+  elektr: "Elektr energiyasi",
+  gaz: "Tabiiy gaz",
 };
 
 export const ROLE_LABEL: Record<Role, string> = {

@@ -32,12 +32,12 @@ const userName = (id: string) =>
   [adminUser, supervisorUser, ...employees].find((u) => u.id === id)?.full_name ?? id;
 
 function UsersPage() {
-  const { auditLogs, role } = useApp();
+  const { auditLogs, role, sectorEmployees } = useApp();
   const go = useGo();
   const [q, setQ] = useState("");
   const [r, setR] = useState("all");
 
-  const all: Employee[] = [adminUser, supervisorUser, ...employees];
+  const all: Employee[] = [adminUser, supervisorUser, ...sectorEmployees];
   const data = all.filter(
     (u) =>
       (!q || u.full_name.toLowerCase().includes(q.toLowerCase()) || u.email.includes(q)) &&

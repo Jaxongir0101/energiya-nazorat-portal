@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { ExportMenu } from "@/components/ExportMenu";
 import { useApp } from "@/lib/store";
-import { employees, territories, TODAY, CAMPAIGN_START } from "@/lib/demo-data";
+import { territories, TODAY, CAMPAIGN_START } from "@/lib/demo-data";
 import {
   buildCollectionRows,
   employeeStats,
@@ -65,7 +65,7 @@ interface DayRow {
 }
 
 function ReportsPage() {
-  const { rows, collections } = useApp();
+  const { rows, collections, sectorEmployees } = useApp();
 
   const [kind, setKind] = useState<ReportKind>("umumiy");
   const [from, setFrom] = useState(toISODate(CAMPAIGN_START));
@@ -140,7 +140,7 @@ function ReportsPage() {
     },
     {
       label: "Mas'ul",
-      value: emp === "all" ? "Barchasi" : (employees.find((x) => x.id === emp)?.full_name ?? ""),
+      value: emp === "all" ? "Barchasi" : (sectorEmployees.find((x) => x.id === emp)?.full_name ?? ""),
     },
     { label: "Hisobot shakllantirilgan sana", value: fmtDateTime(TODAY.toISOString()) },
   ];
@@ -308,7 +308,7 @@ function ReportsPage() {
           <Field label="Mas'ul">
             <select value={emp} onChange={(e) => setEmp(e.target.value)} className={inputCls}>
               <option value="all">Barchasi</option>
-              {employees.map((x) => (
+              {sectorEmployees.map((x) => (
                 <option key={x.id} value={x.id}>
                   {x.full_name}
                 </option>

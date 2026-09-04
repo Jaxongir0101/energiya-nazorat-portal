@@ -41,7 +41,7 @@ type ChartPeriod = "bugun" | "hafta" | "oy" | "tadbir";
 type ChartSort = "kop" | "kam";
 
 function Dashboard() {
-  const { filteredRows, collections, filter } = useApp();
+  const { filteredRows, collections, filter, sector } = useApp();
   const go = useGo();
   const [period, setPeriod] = useState<ChartPeriod>("tadbir");
   const [sortBy, setSortBy] = useState<ChartSort>("kop");
@@ -103,7 +103,7 @@ function Dashboard() {
 
   return (
     <AppShell
-      title="Elektr energiyasi qarzdorliklari monitoringi"
+      title={`${sector === "gaz" ? "Tabiiy gaz" : "Elektr energiyasi"} qarzdorliklari monitoringi`}
       subtitle={`Jizzax viloyati · 13 hudud · 26 mas'ul xodim · ${fmtLongDate(TODAY)}`}
       actions={<AddCollectionDialog />}
     >
