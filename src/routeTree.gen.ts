@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CollectionsRouteImport } from './routes/collections'
+import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as DebtorsIndexRouteImport } from './routes/debtors.index'
 import { Route as DebtorsIdRouteImport } from './routes/debtors.$id'
 import { Route as EmployeesIndexRouteImport } from './routes/employees.index'
@@ -26,6 +27,11 @@ const IndexRoute = IndexRouteImport.update({
 const CollectionsRoute = CollectionsRouteImport.update({
   id: '/collections',
   path: '/collections',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DebtorsIndexRoute = DebtorsIndexRouteImport.update({
@@ -62,6 +68,7 @@ const TerritoriesIdRoute = TerritoriesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/collections': typeof CollectionsRoute
+  '/reports': typeof ReportsRoute
   '/debtors/$id': typeof DebtorsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/territories/$id': typeof TerritoriesIdRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/collections': typeof CollectionsRoute
+  '/reports': typeof ReportsRoute
   '/debtors/$id': typeof DebtorsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/territories/$id': typeof TerritoriesIdRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/collections': typeof CollectionsRoute
+  '/reports': typeof ReportsRoute
   '/debtors/$id': typeof DebtorsIdRoute
   '/employees/$id': typeof EmployeesIdRoute
   '/territories/$id': typeof TerritoriesIdRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/collections'
+    | '/reports'
     | '/debtors/$id'
     | '/employees/$id'
     | '/territories/$id'
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/collections'
+    | '/reports'
     | '/debtors/$id'
     | '/employees/$id'
     | '/territories/$id'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/collections'
+    | '/reports'
     | '/debtors/$id'
     | '/employees/$id'
     | '/territories/$id'
@@ -126,6 +138,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CollectionsRoute: typeof CollectionsRoute
+  ReportsRoute: typeof ReportsRoute
   DebtorsIdRoute: typeof DebtorsIdRoute
   EmployeesIdRoute: typeof EmployeesIdRoute
   TerritoriesIdRoute: typeof TerritoriesIdRoute
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/collections'
       fullPath: '/collections'
       preLoaderRoute: typeof CollectionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/debtors/': {
@@ -198,6 +218,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CollectionsRoute: CollectionsRoute,
+  ReportsRoute: ReportsRoute,
   DebtorsIdRoute: DebtorsIdRoute,
   EmployeesIdRoute: EmployeesIdRoute,
   TerritoriesIdRoute: TerritoriesIdRoute,
