@@ -38,7 +38,7 @@ export const Route = createFileRoute("/")({
 });
 
 type ChartPeriod = "bugun" | "hafta" | "oy" | "tadbir";
-type ChartSort = "kop" | "kam" | "hudud";
+type ChartSort = "kop" | "kam";
 
 function Dashboard() {
   const { filteredRows, collections, filter } = useApp();
@@ -190,7 +190,6 @@ function Dashboard() {
               >
                 <option value="kop">Eng ko'p undirgan</option>
                 <option value="kam">Eng kam undirgan</option>
-                <option value="hudud">Hudud bo'yicha</option>
               </select>
             </div>
           }
@@ -209,64 +208,59 @@ function Dashboard() {
                     <span className="ml-1.5 text-muted-foreground">· {e.territory.name}</span>
                   </span>
                   <span className="font-mono tnum text-muted-foreground">
-                    {fmtShortSom(e.amount)}
+                    {fmtShort(e.amount)} / {fmtShort(e.initial)} so'm
                   </span>
                 </div>
-                <div className="h-6 overflow-hidden rounded-md bg-muted">
+                <div className="relative h-6 overflow-hidden rounded-md bg-muted">
                   <div
-                    className="bar-grow h-full rounded-md bg-gradient-to-r from-brand-deep to-brand"
-                    style={{ width: `${Math.max(2, (e.amount / maxAmount) * 100)}%` }}
-                  />
+                    className="bar-grow flex h-full items-center justify-end rounded-md bg-gradient-to-r from-brand-deep to-brand pr-2"
+                    style={{ width: `${Math.max(6, Math.min(100, pct(e.amount, e.initial)))}%` }}
+                  >
+                    <span className="font-mono text-[10px] font-semibold tnum text-primary-foreground">
+                      {fmtPct(pct(e.amount, e.initial))}
+                    </span>
+                  </div>
                 </div>
               </button>
             ))}
           </div>
         </Panel>
 
-        <section className="card-surface overflow-hidden xl:col-span-2">
-          <div className="flex items-center justify-between px-5 pb-3 pt-5">
-            <h2 className="text-[15px] font-semibold tracking-tight">Hududlar kesimida</h2>
+        <section className="card-surface overflow-hidden p-5 xl:col-span-2">
+          <div className="flex items-center justify-between">
+            <h2 className="text-[15px] font-semibold tracking-tight">
+              Qarzdorlik va undirish taqsimoti
+            </h2>
             <Link to="/territories" className="font-mono text-[11px] text-primary hover:underline">
               13 hudud →
             </Link>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-[12px]">
-              <thead className="bg-muted/95 text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
-                <tr>
-                  <th className="px-5 py-2 text-left font-medium">Hudud</th>
-                  <th className="px-3 py-2 text-right font-medium">Undirilgan</th>
-                  <th className="px-5 py-2 text-right font-medium">Samaradorlik</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {terrStats.map((s) => (
-                  <tr
-                    key={s.territory.id}
-                    className="cursor-pointer hover:bg-muted/60"
-                    onClick={() => go(`/territories/${s.territory.id}`)}
-                  >
-                    <td className="px-5 py-2.5 font-medium">{s.territory.name}</td>
-                    <td className="px-3 py-2.5 text-right font-mono tnum text-muted-foreground">
-                      {fmtShort(s.total)}
-                    </td>
-                    <td className="px-5 py-2.5">
-                      <div className="flex items-center justify-end gap-2">
-                        <div className="h-1.5 w-14 rounded-full bg-muted">
-                          <div
-                            className="h-1.5 rounded-full bg-accent"
-                            style={{ width: `${Math.min(100, s.efficiency)}%` }}
-                          />
-                        </div>
-                        <span className="w-11 text-right font-mono tnum text-muted-foreground">
-                          {s.efficiency.toFixed(1)}%
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="mt-4 space-y-3">
+            {terrStats.map((s) => (
+              <button
+                key={s.territory.id}
+                type="button"
+                onClick={() => go(`/territories/${s.territory.id}`)}
+                className="block w-full text-left"
+              >
+                <div className="mb-1 flex justify-between text-[12px]">
+                  <span className="font-medium">{s.territory.name}</span>
+                  <span className="font-mono tnum text-muted-foreground">
+                    {fmtShort(s.total)} / {fmtShort(s.initial)}
+                  </span>
+                </div>
+                <div className="relative h-5 overflow-hidden rounded-md bg-muted">
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-md bg-brand/25"
+                    style={{ width: `${(s.initial / terrMax) * 100}%` }}
+                  />
+                  <div
+                    className="bar-grow absolute inset-y-0 left-0 rounded-md bg-accent"
+                    style={{ width: `${((s.total / terrMax) * 100).toFixed(2)}%` }}
+                  />
+                </div>
+              </button>
+            ))}
           </div>
         </section>
       </div>
