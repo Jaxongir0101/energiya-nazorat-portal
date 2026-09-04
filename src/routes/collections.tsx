@@ -8,7 +8,7 @@ import { DebtTypeBadge } from "@/components/Badges";
 import { ExportMenu } from "@/components/ExportMenu";
 import { AddCollectionDialog } from "@/components/AddCollectionDialog";
 import { useApp } from "@/lib/store";
-import { employees, territories, TODAY } from "@/lib/demo-data";
+import { territories, TODAY } from "@/lib/demo-data";
 import { buildCollectionRows, inRange, isSameDay, type CollectionRow } from "@/lib/derive";
 import { fmtDateTime, fmtNumber, fmtSom, toISODate } from "@/lib/format";
 import { DEBT_TYPE_LABEL, PAYMENT_TYPE_LABEL } from "@/lib/types";
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/collections")({
 
 function CollectionsPage() {
   const { period } = Route.useSearch();
-  const { rows, collections } = useApp();
+  const { rows, collections, sectorEmployees } = useApp();
   const go = useGo();
 
   const today = toISODate(TODAY);
@@ -189,7 +189,7 @@ function CollectionsPage() {
                 {
                   label: "Mas'ul",
                   value:
-                    emp === "all" ? "Barchasi" : (employees.find((x) => x.id === emp)?.full_name ?? ""),
+                    emp === "all" ? "Barchasi" : (sectorEmployees.find((x) => x.id === emp)?.full_name ?? ""),
                 },
               ],
               totals: [{ label: "Jami undirildi", value: fmtSom(total) }],
@@ -232,7 +232,7 @@ function CollectionsPage() {
               onChange={setEmp}
               options={[
                 { value: "all", label: "Barcha mas'ullar" },
-                ...employees.map((x) => ({ value: x.id, label: x.short_name })),
+                ...sectorEmployees.map((x) => ({ value: x.id, label: x.short_name })),
               ]}
             />
             <TableSelect

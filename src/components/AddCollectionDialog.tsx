@@ -11,12 +11,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useApp } from "@/lib/store";
-import { employees, TODAY } from "@/lib/demo-data";
+import { TODAY } from "@/lib/demo-data";
 import { toISODate } from "@/lib/format";
 import { PAYMENT_TYPE_LABEL, type PaymentType } from "@/lib/types";
 
 export function AddCollectionDialog({ companyId }: { companyId?: string }) {
-  const { rows, addCollection, currentUser, role } = useApp();
+  const { rows, addCollection, currentUser, role, sectorEmployees } = useApp();
   const [open, setOpen] = useState(false);
   const [company, setCompany] = useState(companyId ?? rows[0]?.id ?? "");
   const [amount, setAmount] = useState("");
@@ -25,7 +25,7 @@ export function AddCollectionDialog({ companyId }: { companyId?: string }) {
   const [comment, setComment] = useState("");
   const [doc, setDoc] = useState<string | null>(null);
   const [employee, setEmployee] = useState(
-    role === "masul" ? currentUser.id : (rows[0]?.responsible_employee_id ?? employees[0]!.id),
+    role === "masul" ? currentUser.id : (rows[0]?.responsible_employee_id ?? sectorEmployees[0]!.id),
   );
 
   const submit = () => {
@@ -137,7 +137,7 @@ export function AddCollectionDialog({ companyId }: { companyId?: string }) {
                 className={inputCls}
                 disabled={role === "masul"}
               >
-                {employees.map((e) => (
+                {sectorEmployees.map((e) => (
                   <option key={e.id} value={e.id}>
                     {e.full_name}
                   </option>

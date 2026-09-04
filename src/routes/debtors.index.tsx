@@ -7,7 +7,7 @@ import { DebtTypeBadge, StatusBadge } from "@/components/Badges";
 import { ExportMenu } from "@/components/ExportMenu";
 import { AddCollectionDialog } from "@/components/AddCollectionDialog";
 import { useApp } from "@/lib/store";
-import { employees, territories } from "@/lib/demo-data";
+import { territories } from "@/lib/demo-data";
 import { fmtDate, fmtNumber, fmtSom } from "@/lib/format";
 import { totalsOf, type CompanyRow } from "@/lib/derive";
 import { DEBT_TYPE_LABEL, STATUS_LABEL, type CompanyStatus, type DebtType } from "@/lib/types";
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/debtors/")({
 
 function DebtorsPage() {
   const { type } = Route.useSearch();
-  const { rows } = useApp();
+  const { rows, sectorEmployees } = useApp();
   const go = useGo();
 
   const [q, setQ] = useState("");
@@ -185,7 +185,7 @@ function DebtorsPage() {
               ],
               meta: [
                 { label: "Hudud", value: terr === "all" ? "Barchasi" : (territories.find((x) => x.id === terr)?.name ?? "") },
-                { label: "Mas'ul", value: emp === "all" ? "Barchasi" : (employees.find((x) => x.id === emp)?.full_name ?? "") },
+                { label: "Mas'ul", value: emp === "all" ? "Barchasi" : (sectorEmployees.find((x) => x.id === emp)?.full_name ?? "") },
                 {
                   label: "Qarzdorlik turi",
                   value: debt === "all" ? "Barchasi" : DEBT_TYPE_LABEL[debt as DebtType],
@@ -224,7 +224,7 @@ function DebtorsPage() {
               onChange={setEmp}
               options={[
                 { value: "all", label: "Barcha mas'ullar" },
-                ...employees.map((x) => ({ value: x.id, label: x.short_name })),
+                ...sectorEmployees.map((x) => ({ value: x.id, label: x.short_name })),
               ]}
             />
             <TableSelect
