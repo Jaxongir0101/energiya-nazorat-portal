@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DebtorsIndexRouteImport } from './routes/debtors.index'
+import { Route as DebtorsIdRouteImport } from './routes/debtors.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,30 +23,39 @@ const DebtorsIndexRoute = DebtorsIndexRouteImport.update({
   path: '/debtors/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DebtorsIdRoute = DebtorsIdRouteImport.update({
+  id: '/debtors/$id',
+  path: '/debtors/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/debtors/$id': typeof DebtorsIdRoute
   '/debtors/': typeof DebtorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/debtors/$id': typeof DebtorsIdRoute
   '/debtors': typeof DebtorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/debtors/$id': typeof DebtorsIdRoute
   '/debtors/': typeof DebtorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/debtors/'
+  fullPaths: '/' | '/debtors/$id' | '/debtors/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/debtors'
-  id: '__root__' | '/' | '/debtors/'
+  to: '/' | '/debtors/$id' | '/debtors'
+  id: '__root__' | '/' | '/debtors/$id' | '/debtors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DebtorsIdRoute: typeof DebtorsIdRoute
   DebtorsIndexRoute: typeof DebtorsIndexRoute
 }
 
@@ -65,11 +75,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DebtorsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/debtors/$id': {
+      id: '/debtors/$id'
+      path: '/debtors/$id'
+      fullPath: '/debtors/$id'
+      preLoaderRoute: typeof DebtorsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DebtorsIdRoute: DebtorsIdRoute,
   DebtorsIndexRoute: DebtorsIndexRoute,
 }
 export const routeTree = rootRouteImport
