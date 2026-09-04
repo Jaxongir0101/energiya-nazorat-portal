@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DebtorsIndexRouteImport } from './routes/debtors.index'
 import { Route as DebtorsIdRouteImport } from './routes/debtors.$id'
+import { Route as TerritoriesIndexRouteImport } from './routes/territories.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,44 @@ const DebtorsIdRoute = DebtorsIdRouteImport.update({
   path: '/debtors/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TerritoriesIndexRoute = TerritoriesIndexRouteImport.update({
+  id: '/territories/',
+  path: '/territories/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/debtors/$id': typeof DebtorsIdRoute
   '/debtors/': typeof DebtorsIndexRoute
+  '/territories/': typeof TerritoriesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/debtors/$id': typeof DebtorsIdRoute
   '/debtors': typeof DebtorsIndexRoute
+  '/territories': typeof TerritoriesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/debtors/$id': typeof DebtorsIdRoute
   '/debtors/': typeof DebtorsIndexRoute
+  '/territories/': typeof TerritoriesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/debtors/$id' | '/debtors/'
+  fullPaths: '/' | '/debtors/$id' | '/debtors/' | '/territories/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/debtors/$id' | '/debtors'
-  id: '__root__' | '/' | '/debtors/$id' | '/debtors/'
+  to: '/' | '/debtors/$id' | '/debtors' | '/territories'
+  id: '__root__' | '/' | '/debtors/$id' | '/debtors/' | '/territories/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DebtorsIdRoute: typeof DebtorsIdRoute
   DebtorsIndexRoute: typeof DebtorsIndexRoute
+  TerritoriesIndexRoute: typeof TerritoriesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DebtorsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/territories/': {
+      id: '/territories/'
+      path: '/territories'
+      fullPath: '/territories/'
+      preLoaderRoute: typeof TerritoriesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DebtorsIdRoute: DebtorsIdRoute,
   DebtorsIndexRoute: DebtorsIndexRoute,
+  TerritoriesIndexRoute: TerritoriesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
