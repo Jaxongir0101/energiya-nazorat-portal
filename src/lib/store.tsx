@@ -10,7 +10,15 @@ import {
   supervisorUser,
 } from "./demo-data";
 import { toISODate } from "./format";
-import type { AppNotification, AuditLog, Collection, DebtType, Employee, Role } from "./types";
+import type {
+  AppNotification,
+  AuditLog,
+  Collection,
+  DebtType,
+  Employee,
+  Role,
+  Sector,
+} from "./types";
 import { buildCompanyRows, type CompanyRow, type DateRange } from "./derive";
 
 export type QuickRange = "bugun" | "kecha" | "7kun" | "oy" | "tadbir" | "ixtiyoriy";
@@ -63,6 +71,9 @@ export interface NewCollectionInput {
 
 interface Ctx {
   currentUser: Employee;
+  sector: Sector;
+  setSector: (s: Sector) => void;
+  sectorEmployees: Employee[];
   role: Role;
   setRole: (r: Role) => void;
   collections: Collection[];
@@ -92,26 +103,28 @@ const DEFAULT_FILTER: GlobalFilter = {
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<Role>("super_admin");
+  const [sector, setSectorState] = useState<Sector>("elektr");
   const [collections, setCollections] = useState<Collection[]>(seedCollections);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>(initialAuditLogs);
   const [notifications, setNotifications] = useState<AppNotification[]>(initialNotifications);
   const [filter, setFilterState] = useState<GlobalFilter>(DEFAULT_FILTER);
 
+  const sectorEmployees = useMemo(() => employees.filter((e) => e.sector === sector), [sector]);
+
   const currentUser: Employee =
-    role === "super_admin" ? adminUser : role === "nazoratchi" ? supervisorUser : employees[0]!;
+    role === "super_admin" ? adminUser : role === "nazoratchi" ? supervisorUser : sectorEmployees[0]!;
 
   const allRows = useMemo(
     () => buildCompanyRows(collections, filter.range),
     [collections, filter.range],
   );
 
-  const rows = useMemo(
-    () =>
-      role === "masul"
-        ? allRows.filter((r) => r.responsible_employee_id === currentUser.id)
-        : allRows,
-    [allRows, role, currentUser.id],
-  );
+  const rows = useMemo(() => {
+    const bySector = allRows.filter((r) => r.sector === sector);
+    return role === "masul"
+      ? bySector.filter((r) => r.responsible_employee_id === currentUser.id)
+      : bySector;
+  }, [allRows, role, currentUser.id, sector]);
 
   const filteredRows = useMemo(
     () =>
@@ -131,6 +144,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const value: Ctx = {
     currentUser,
+    sector,
+    sectorEmployees,
+    setSector: (next) => {
+      setSectorState(next);
+      setFilterState((prev) => ({ ...prev, territoryId: "all", employeeId: "all" }));
+    },
     role,
     setRole,
     collections,
