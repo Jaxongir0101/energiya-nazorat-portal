@@ -5,6 +5,7 @@ import {
   Building2,
   ChevronRight,
   FileBarChart2,
+  Flame,
   LayoutDashboard,
   LogOut,
   Map,
@@ -15,6 +16,7 @@ import {
   UserCog,
   Users,
   Wallet,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/store";
