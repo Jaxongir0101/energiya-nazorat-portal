@@ -102,7 +102,6 @@ function TerritoryDetail() {
       title={territory.name}
       subtitle={`${list.length} ta qarzdor korxona · ${emps.length} ta mas'ul xodim`}
       crumbs={[
-        { label: "Dashboard", to: "/" },
         { label: "Hududlar", to: "/territories" },
         { label: territory.name },
       ]}

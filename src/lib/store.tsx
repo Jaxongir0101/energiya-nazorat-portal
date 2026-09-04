@@ -98,7 +98,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [filter, setFilterState] = useState<GlobalFilter>(DEFAULT_FILTER);
 
   const currentUser: Employee =
-    role === "super_admin" ? adminUser : role === "nazoratchi" ? supervisorUser : employees[0];
+    role === "super_admin" ? adminUser : role === "nazoratchi" ? supervisorUser : employees[0]!;
 
   const allRows = useMemo(
     () => buildCompanyRows(collections, filter.range),

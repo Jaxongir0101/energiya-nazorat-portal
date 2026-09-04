@@ -90,7 +90,7 @@ function TerritoriesPage() {
     <AppShell
       title="Hududlar kesimida"
       subtitle={`13 hudud · jami ${fmtSom(t.initial)} · undirildi ${fmtSom(t.collected)}`}
-      crumbs={[{ label: "Dashboard", to: "/" }, { label: "Hududlar" }]}
+      crumbs={[{ label: "Hududlar" }]}
       actions={
         <ExportMenu
           payload={() => ({

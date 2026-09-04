@@ -18,7 +18,7 @@ function makeRng(seed: number) {
   };
 }
 const rnd = makeRng(20260904);
-const pick = <T,>(arr: readonly T[]): T => arr[Math.floor(rnd() * arr.length)];
+const pick = <T,>(arr: readonly T[]): T => arr[Math.floor(rnd() * arr.length)]!;
 const between = (a: number, b: number) => a + rnd() * (b - a);
 
 /** Kampaniya boshlanish sanasi */
@@ -107,8 +107,8 @@ export const employees: Employee[] = [];
 territories.forEach((t, ti) => {
   for (let k = 0; k < 2; k++) {
     const idx = ti * 2 + k;
-    const first = FIRST[idx % FIRST.length];
-    let last = LAST[(idx * 3 + 1) % LAST.length];
+    const first = FIRST[idx % FIRST.length]!;
+    let last = LAST[(idx * 3 + 1) % LAST.length]!;
     if (femaleName(first)) last = last.replace(/ov$/, "ova").replace(/ev$/, "eva");
     employees.push({
       id: `e${String(idx + 1).padStart(2, "0")}`,
@@ -237,7 +237,7 @@ territories.forEach((t) => {
       phone: `+998 ${pick(["72", "90", "91", "93"])} ${Math.floor(between(200, 999))}-${Math.floor(between(10, 99))}-${Math.floor(between(10, 99))}`,
       address: `${t.name}, ${pick(STREETS)}, ${Math.floor(between(1, 120))}-uy`,
       territory_id: t.id,
-      responsible_employee_id: emps[i % 2].id,
+      responsible_employee_id: emps[i % 2]!.id,
       debt_type,
       initial_debt: initial,
       created_at: "2026-07-28T10:00:00",
@@ -289,8 +289,8 @@ companies.forEach((c) => {
       employee_id: c.responsible_employee_id,
       amount,
       collection_date: d.toISOString(),
-      payment_type: PAYMENT_TYPES[colIdx % PAYMENT_TYPES.length],
-      comment: COMMENTS[colIdx % COMMENTS.length],
+      payment_type: PAYMENT_TYPES[colIdx % PAYMENT_TYPES.length]!,
+      comment: COMMENTS[colIdx % COMMENTS.length]!,
       document_url: colIdx % 3 === 0 ? "#" : null,
       document_name: colIdx % 3 === 0 ? `tolov-${colIdx}.pdf` : null,
       created_at: d.toISOString(),
@@ -301,7 +301,7 @@ companies.forEach((c) => {
 
 // Bugungi undirishlar (yaqin vaqtlar) — dashboard "So'nggi undirishlar" uchun
 for (let i = 0; i < 14; i++) {
-  const c = companies[(i * 7 + 3) % companies.length];
+  const c = companies[(i * 7 + 3) % companies.length]!;
   const d = new Date(TODAY);
   d.setMinutes(d.getMinutes() - (5 + i * 37));
   colIdx++;
@@ -311,8 +311,8 @@ for (let i = 0; i < 14; i++) {
     employee_id: c.responsible_employee_id,
     amount: Math.round(between(5, 60)) * 1_000_000,
     collection_date: d.toISOString(),
-    payment_type: PAYMENT_TYPES[i % PAYMENT_TYPES.length],
-    comment: COMMENTS[(i + 2) % COMMENTS.length],
+    payment_type: PAYMENT_TYPES[i % PAYMENT_TYPES.length]!,
+    comment: COMMENTS[(i + 2) % COMMENTS.length]!,
     document_url: i % 2 === 0 ? "#" : null,
     document_name: i % 2 === 0 ? `dalolatnoma-${i}.pdf` : null,
     created_at: d.toISOString(),
@@ -339,26 +339,26 @@ export const initialNotifications: AppNotification[] = [
   {
     id: "n1",
     title: "Yangi undirish kiritildi",
-    body: `${companies[3].name} bo'yicha to'lov qayd etildi.`,
+    body: `${companies[3]!.name} bo'yicha to'lov qayd etildi.`,
     created_at: new Date(TODAY.getTime() - 6 * 60000).toISOString(),
     read: false,
-    link: `/debtors/${companies[3].id}`,
+    link: `/debtors/${companies[3]!.id}`,
   },
   {
     id: "n2",
     title: "Qarzdorlik to'liq undirildi",
-    body: `${companies[11].name} bo'yicha qarzdorlik yopildi.`,
+    body: `${companies[11]!.name} bo'yicha qarzdorlik yopildi.`,
     created_at: new Date(TODAY.getTime() - 55 * 60000).toISOString(),
     read: false,
-    link: `/debtors/${companies[11].id}`,
+    link: `/debtors/${companies[11]!.id}`,
   },
   {
     id: "n3",
     title: "Yangi korxona biriktirildi",
-    body: `${companies[20].name} mas'ul xodimga biriktirildi.`,
+    body: `${companies[20]!.name} mas'ul xodimga biriktirildi.`,
     created_at: new Date(TODAY.getTime() - 4 * 3600000).toISOString(),
     read: true,
-    link: `/debtors/${companies[20].id}`,
+    link: `/debtors/${companies[20]!.id}`,
   },
   {
     id: "n4",

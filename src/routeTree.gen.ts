@@ -10,14 +10,46 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CollectionsRouteImport } from './routes/collections'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as UsersRouteImport } from './routes/users'
 import { Route as DebtorsIndexRouteImport } from './routes/debtors.index'
 import { Route as DebtorsIdRouteImport } from './routes/debtors.$id'
+import { Route as EmployeesIndexRouteImport } from './routes/employees.index'
+import { Route as EmployeesIdRouteImport } from './routes/employees.$id'
 import { Route as TerritoriesIndexRouteImport } from './routes/territories.index'
 import { Route as TerritoriesIdRouteImport } from './routes/territories.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionsRoute = CollectionsRouteImport.update({
+  id: '/collections',
+  path: '/collections',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UsersRoute = UsersRouteImport.update({
+  id: '/users',
+  path: '/users',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DebtorsIndexRoute = DebtorsIndexRouteImport.update({
@@ -28,6 +60,16 @@ const DebtorsIndexRoute = DebtorsIndexRouteImport.update({
 const DebtorsIdRoute = DebtorsIdRouteImport.update({
   id: '/debtors/$id',
   path: '/debtors/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeesIndexRoute = EmployeesIndexRouteImport.update({
+  id: '/employees/',
+  path: '/employees/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EmployeesIdRoute = EmployeesIdRouteImport.update({
+  id: '/employees/$id',
+  path: '/employees/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TerritoriesIndexRoute = TerritoriesIndexRouteImport.update({
@@ -43,46 +85,104 @@ const TerritoriesIdRoute = TerritoriesIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/collections': typeof CollectionsRoute
+  '/profile': typeof ProfileRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/users': typeof UsersRoute
   '/debtors/$id': typeof DebtorsIdRoute
+  '/employees/$id': typeof EmployeesIdRoute
   '/territories/$id': typeof TerritoriesIdRoute
   '/debtors/': typeof DebtorsIndexRoute
+  '/employees/': typeof EmployeesIndexRoute
   '/territories/': typeof TerritoriesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/collections': typeof CollectionsRoute
+  '/profile': typeof ProfileRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/users': typeof UsersRoute
   '/debtors/$id': typeof DebtorsIdRoute
+  '/employees/$id': typeof EmployeesIdRoute
   '/territories/$id': typeof TerritoriesIdRoute
   '/debtors': typeof DebtorsIndexRoute
+  '/employees': typeof EmployeesIndexRoute
   '/territories': typeof TerritoriesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/collections': typeof CollectionsRoute
+  '/profile': typeof ProfileRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/users': typeof UsersRoute
   '/debtors/$id': typeof DebtorsIdRoute
+  '/employees/$id': typeof EmployeesIdRoute
   '/territories/$id': typeof TerritoriesIdRoute
   '/debtors/': typeof DebtorsIndexRoute
+  '/employees/': typeof EmployeesIndexRoute
   '/territories/': typeof TerritoriesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/debtors/$id' | '/territories/$id' | '/debtors/' | '/territories/'
+    | '/'
+    | '/collections'
+    | '/profile'
+    | '/reports'
+    | '/settings'
+    | '/users'
+    | '/debtors/$id'
+    | '/employees/$id'
+    | '/territories/$id'
+    | '/debtors/'
+    | '/employees/'
+    | '/territories/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/debtors/$id' | '/territories/$id' | '/debtors' | '/territories'
+  to:
+    | '/'
+    | '/collections'
+    | '/profile'
+    | '/reports'
+    | '/settings'
+    | '/users'
+    | '/debtors/$id'
+    | '/employees/$id'
+    | '/territories/$id'
+    | '/debtors'
+    | '/employees'
+    | '/territories'
   id:
     | '__root__'
     | '/'
+    | '/collections'
+    | '/profile'
+    | '/reports'
+    | '/settings'
+    | '/users'
     | '/debtors/$id'
+    | '/employees/$id'
     | '/territories/$id'
     | '/debtors/'
+    | '/employees/'
     | '/territories/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CollectionsRoute: typeof CollectionsRoute
+  ProfileRoute: typeof ProfileRoute
+  ReportsRoute: typeof ReportsRoute
+  SettingsRoute: typeof SettingsRoute
+  UsersRoute: typeof UsersRoute
   DebtorsIdRoute: typeof DebtorsIdRoute
+  EmployeesIdRoute: typeof EmployeesIdRoute
   TerritoriesIdRoute: typeof TerritoriesIdRoute
   DebtorsIndexRoute: typeof DebtorsIndexRoute
+  EmployeesIndexRoute: typeof EmployeesIndexRoute
   TerritoriesIndexRoute: typeof TerritoriesIndexRoute
 }
 
@@ -93,6 +193,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collections': {
+      id: '/collections'
+      path: '/collections'
+      fullPath: '/collections'
+      preLoaderRoute: typeof CollectionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/users': {
+      id: '/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof UsersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/debtors/': {
@@ -107,6 +242,20 @@ declare module '@tanstack/react-router' {
       path: '/debtors/$id'
       fullPath: '/debtors/$id'
       preLoaderRoute: typeof DebtorsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/employees/': {
+      id: '/employees/'
+      path: '/employees'
+      fullPath: '/employees/'
+      preLoaderRoute: typeof EmployeesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/employees/$id': {
+      id: '/employees/$id'
+      path: '/employees/$id'
+      fullPath: '/employees/$id'
+      preLoaderRoute: typeof EmployeesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/territories/': {
@@ -128,9 +277,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CollectionsRoute: CollectionsRoute,
+  ProfileRoute: ProfileRoute,
+  ReportsRoute: ReportsRoute,
+  SettingsRoute: SettingsRoute,
+  UsersRoute: UsersRoute,
   DebtorsIdRoute: DebtorsIdRoute,
+  EmployeesIdRoute: EmployeesIdRoute,
   TerritoriesIdRoute: TerritoriesIdRoute,
   DebtorsIndexRoute: DebtorsIndexRoute,
+  EmployeesIndexRoute: EmployeesIndexRoute,
   TerritoriesIndexRoute: TerritoriesIndexRoute,
 }
 export const routeTree = rootRouteImport

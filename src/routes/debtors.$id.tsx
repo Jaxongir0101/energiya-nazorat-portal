@@ -65,7 +65,6 @@ function DebtorDetail() {
         </span>
       }
       crumbs={[
-        { label: "Dashboard", to: "/" },
         { label: row.territory.name, to: `/territories/${row.territory_id}` },
         { label: row.name },
       ]}

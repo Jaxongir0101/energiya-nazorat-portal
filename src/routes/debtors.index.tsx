@@ -13,8 +13,8 @@ import { totalsOf, type CompanyRow } from "@/lib/derive";
 import { DEBT_TYPE_LABEL, STATUS_LABEL, type CompanyStatus, type DebtType } from "@/lib/types";
 
 export const Route = createFileRoute("/debtors/")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    type: typeof s.type === "string" ? s.type : "all",
+  validateSearch: (s: Record<string, unknown>): { type?: string } => ({
+    type: typeof s["type"] === "string" ? (s["type"] as string) : "all",
   }),
   head: () => ({
     meta: [
@@ -138,7 +138,7 @@ function DebtorsPage() {
     <AppShell
       title="Qarzdorlar"
       subtitle={`${data.length} ta korxona · jami ${fmtSom(t.initial)} · qoldiq ${fmtSom(t.remaining)}`}
-      crumbs={[{ label: "Dashboard", to: "/" }, { label: "Qarzdorlar" }]}
+      crumbs={[{ label: "Qarzdorlar" }]}
       actions={
         <div className="flex items-center gap-2">
           <ExportMenu
