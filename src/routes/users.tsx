@@ -28,6 +28,9 @@ export const Route = createFileRoute("/users")({
   component: UsersPage,
 });
 
+const userName = (id: string) =>
+  [adminUser, supervisorUser, ...employees].find((u) => u.id === id)?.full_name ?? id;
+
 function UsersPage() {
   const { auditLogs, role } = useApp();
   const go = useGo();
@@ -83,10 +86,10 @@ function UsersPage() {
         <span
           className={cn(
             "rounded-md px-2 py-0.5 text-[11px]",
-            u.status === "active" ? "bg-positive/12 text-positive" : "bg-muted text-muted-foreground",
+            u.status === "faol" ? "bg-positive/12 text-positive" : "bg-muted text-muted-foreground",
           )}
         >
-          {u.status === "active" ? "Faol" : "Nofaol"}
+          {u.status === "faol" ? "Faol" : "Nofaol"}
         </span>
       ),
     },
@@ -144,11 +147,13 @@ function UsersPage() {
                   <td className="px-3 py-2 font-mono text-muted-foreground">
                     {fmtDateTime(l.created_at)}
                   </td>
-                  <td className="px-3 py-2">{l.user_name}</td>
+                  <td className="px-3 py-2">{userName(l.user_id)}</td>
                   <td className="px-3 py-2">{l.action}</td>
-                  <td className="px-3 py-2 text-muted-foreground">{l.entity_label}</td>
-                  <td className="px-3 py-2 font-mono text-muted-foreground">{l.old_value ?? "—"}</td>
-                  <td className="px-3 py-2 font-mono text-accent">{l.new_value ?? "—"}</td>
+                  <td className="px-3 py-2 text-muted-foreground">
+                    {l.entity_type} · {l.entity_id}
+                  </td>
+                  <td className="px-3 py-2 font-mono text-muted-foreground">{l.old_data ?? "—"}</td>
+                  <td className="px-3 py-2 font-mono text-accent">{l.new_data ?? "—"}</td>
                 </tr>
               ))}
             </tbody>

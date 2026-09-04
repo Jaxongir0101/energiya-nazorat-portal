@@ -25,7 +25,7 @@ export const Route = createFileRoute("/profile")({
 function ProfilePage() {
   const { currentUser, auditLogs, notifications } = useApp();
   const territory = currentUser.territory_id ? territoryById(currentUser.territory_id) : null;
-  const mine = auditLogs.filter((l) => l.user_name === currentUser.full_name).slice(0, 10);
+  const mine = auditLogs.filter((l) => l.user_id === currentUser.id).slice(0, 10);
 
   return (
     <AppShell
@@ -57,7 +57,7 @@ function ProfilePage() {
             )}
             <Row
               label="Holati"
-              value={currentUser.status === "active" ? "Faol" : "Nofaol"}
+              value={currentUser.status === "faol" ? "Faol" : "Nofaol"}
             />
           </dl>
         </section>
@@ -99,8 +99,8 @@ function ProfilePage() {
                     {fmtDateTime(l.created_at)}
                   </td>
                   <td className="px-3 py-2">{l.action}</td>
-                  <td className="px-3 py-2 text-muted-foreground">{l.entity_label}</td>
-                  <td className="px-3 py-2 font-mono text-accent">{l.new_value ?? "—"}</td>
+                  <td className="px-3 py-2 text-muted-foreground">{l.entity_type}</td>
+                  <td className="px-3 py-2 font-mono text-accent">{l.new_data ?? "—"}</td>
                 </tr>
               ))}
               {mine.length === 0 && (
