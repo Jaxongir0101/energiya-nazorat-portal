@@ -232,7 +232,7 @@ territories.forEach((t) => {
     companies.push({
       id: `c${String(cIdx).padStart(3, "0")}`,
       name: `"${base}${withSuffix}" ${pick(NAME_B)}`,
-      stir: String(300000000 + Math.floor(between(1, 99999999))),
+      stir: "0",
       director_name: `${last} ${first}`,
       phone: `+998 ${pick(["72", "90", "91", "93"])} ${Math.floor(between(200, 999))}-${Math.floor(between(10, 99))}-${Math.floor(between(10, 99))}`,
       address: `${t.name}, ${pick(STREETS)}, ${Math.floor(between(1, 120))}-uy`,

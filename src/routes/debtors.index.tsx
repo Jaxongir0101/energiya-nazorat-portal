@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { useGo } from "@/components/AppLink";
 import { DataTable, TableSearch, TableSelect, type Column } from "@/components/DataTable";
-import { DebtTypeBadge, Progress, StatusBadge } from "@/components/Badges";
+import { DebtTypeBadge, StatusBadge } from "@/components/Badges";
 import { ExportMenu } from "@/components/ExportMenu";
 import { AddCollectionDialog } from "@/components/AddCollectionDialog";
 import { useApp } from "@/lib/store";
@@ -116,7 +116,9 @@ function DebtorsPage() {
     {
       key: "pct",
       header: "Samaradorlik",
-      cell: (r) => <Progress value={r.percentage} />,
+      cell: (r) => (
+        <span className="font-mono tnum">{r.percentage.toFixed(1)}%</span>
+      ),
       sortValue: (r) => r.percentage,
       className: "w-36",
     },

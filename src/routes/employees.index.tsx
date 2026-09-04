@@ -3,7 +3,6 @@ import { AppShell } from "@/components/AppShell";
 import { AppLink, useGo } from "@/components/AppLink";
 import { GlobalFilters } from "@/components/GlobalFilters";
 import { DataTable, type Column } from "@/components/DataTable";
-import { Progress } from "@/components/Badges";
 import { ExportMenu } from "@/components/ExportMenu";
 import { useApp } from "@/lib/store";
 import { employeeStats, totalsOf, type EmployeeStat } from "@/lib/derive";
@@ -98,7 +97,9 @@ function EmployeesPage() {
     {
       key: "eff",
       header: "Samaradorlik %",
-      cell: (r) => <Progress value={r.efficiency} />,
+      cell: (r) => (
+        <span className="font-mono tnum">{r.efficiency.toFixed(1)}%</span>
+      ),
       sortValue: (r) => r.efficiency,
       className: "w-40",
     },
