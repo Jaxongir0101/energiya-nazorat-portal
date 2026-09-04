@@ -1,7 +1,7 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { createFileRoute as _unused } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
+import { AppLink, useGo } from "@/components/AppLink";
 import { GlobalFilters } from "@/components/GlobalFilters";
 import { KpiCard, Panel } from "@/components/Kpi";
 import { AddCollectionDialog } from "@/components/AddCollectionDialog";
@@ -15,10 +15,8 @@ import {
   totalsOf,
 } from "@/lib/derive";
 import { TODAY } from "@/lib/demo-data";
-import { fmtLongDate, fmtPct, fmtShortSom, fmtSom, pct, timeAgo } from "@/lib/format";
+import { fmtLongDate, fmtPct, fmtShort, fmtShortSom, fmtSom, pct, timeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
-
-void _unused;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -44,11 +42,12 @@ type ChartSort = "kop" | "kam" | "hudud";
 
 function Dashboard() {
   const { filteredRows, collections, filter } = useApp();
-  const navigate = useNavigate();
+  const go = useGo();
   const [period, setPeriod] = useState<ChartPeriod>("tadbir");
   const [sortBy, setSortBy] = useState<ChartSort>("kop");
 
   const t = totalsOf(filteredRows);
+
   const yesterdayTotal = useMemo(() => {
     const y = new Date(TODAY);
     y.setDate(y.getDate() - 1);
@@ -63,18 +62,23 @@ function Dashboard() {
   const empBase = employeeStats(filteredRows);
   const empChart = useMemo(() => {
     const ids = new Set(filteredRows.map((r) => r.id));
-    const start = new Date(TODAY);
-    if (period === "hafta") start.setDate(start.getDate() - 6);
-    if (period === "oy") start.setDate(1);
+    const weekStart = new Date(TODAY);
+    weekStart.setDate(weekStart.getDate() - 6);
+    weekStart.setHours(0, 0, 0, 0);
+    const monthStart = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
+
     const inPeriod = (iso: string) => {
       if (period === "bugun") return isSameDay(iso, TODAY);
       if (period === "tadbir") return true;
-      return new Date(iso) >= new Date(start.setHours(0, 0, 0, 0));
+      const d = new Date(iso);
+      return period === "hafta" ? d >= weekStart : d >= monthStart;
     };
+
     const map = new Map<string, number>();
     collections
       .filter((c) => ids.has(c.company_id) && inPeriod(c.collection_date))
       .forEach((c) => map.set(c.employee_id, (map.get(c.employee_id) ?? 0) + c.amount));
+
     const list = empBase.map((e) => ({ ...e, amount: map.get(e.employee.id) ?? 0 }));
     if (sortBy === "kam") list.sort((a, b) => a.amount - b.amount);
     else if (sortBy === "hudud")
@@ -109,26 +113,26 @@ function Dashboard() {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
         <KpiCard
           label="Jami qarzdorlik"
-          value={fmtShortSom(t.initial).replace(" so'm", "")}
+          value={fmtShort(t.initial)}
           hint={`${t.companies.toLocaleString("ru-RU")} ta qarzdor korxona`}
           to="/debtors"
         />
         <KpiCard
           label="Umidsiz"
-          value={fmtShortSom(t.umidsiz).replace(" so'm", "")}
+          value={fmtShort(t.umidsiz)}
           tone="deep"
           hint={`${fmtPct(pct(t.umidsiz, t.remaining))} ulush`}
           to="/debtors?type=umidsiz"
         />
         <KpiCard
           label="Harakatdagi"
-          value={fmtShortSom(t.harakatdagi).replace(" so'm", "")}
+          value={fmtShort(t.harakatdagi)}
           hint={`${fmtPct(pct(t.harakatdagi, t.remaining))} ulush`}
           to="/debtors?type=harakatdagi"
         />
         <KpiCard
           label="Bugun undirildi"
-          value={fmtShortSom(t.collected_today).replace(" so'm", "")}
+          value={fmtShort(t.collected_today)}
           tone="accent"
           accent
           hint={
@@ -143,13 +147,13 @@ function Dashboard() {
         />
         <KpiCard
           label="Tadbir boshidan"
-          value={fmtShortSom(t.collected).replace(" so'm", "")}
+          value={fmtShort(t.collected)}
           hint={`${fmtPct(t.efficiency)} undirildi`}
           to="/collections"
         />
         <KpiCard
           label="Qolgan qarzdorlik"
-          value={fmtShortSom(t.remaining).replace(" so'm", "")}
+          value={fmtShort(t.remaining)}
           hint={`${fmtPct(pct(t.remaining, t.initial))} qoldi`}
           to="/debtors"
         />
@@ -167,11 +171,17 @@ function Dashboard() {
                   type="button"
                   onClick={() => setPeriod(p)}
                   className={cn(
-                    "rounded px-2 py-1 capitalize",
+                    "rounded px-2 py-1",
                     period === p ? "bg-primary text-primary-foreground" : "text-muted-foreground",
                   )}
                 >
-                  {p === "tadbir" ? "Tadbir boshidan" : p}
+                  {p === "tadbir"
+                    ? "Tadbir boshidan"
+                    : p === "bugun"
+                      ? "Bugun"
+                      : p === "hafta"
+                        ? "Hafta"
+                        : "Oy"}
                 </button>
               ))}
               <select
@@ -191,7 +201,7 @@ function Dashboard() {
               <button
                 key={e.employee.id}
                 type="button"
-                onClick={() => navigate({ to: `/employees/${e.employee.id}` })}
+                onClick={() => go(`/employees/${e.employee.id}`)}
                 className="block w-full text-left"
               >
                 <div className="mb-1 flex justify-between text-[12px]">
@@ -235,7 +245,7 @@ function Dashboard() {
                   <tr
                     key={s.territory.id}
                     className="cursor-pointer hover:bg-muted/60"
-                    onClick={() => navigate({ to: `/territories/${s.territory.id}` })}
+                    onClick={() => go(`/territories/${s.territory.id}`)}
                   >
                     <td className="px-5 py-2.5 font-medium">{s.territory.name}</td>
                     <td className="px-3 py-2.5 text-right font-mono tnum text-muted-foreground">
@@ -277,7 +287,7 @@ function Dashboard() {
       >
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           {recent.map((c) => (
-            <Link
+            <AppLink
               key={c.id}
               to={`/debtors/${c.company_id}`}
               className="block rounded-lg p-3.5 ring-1 ring-border transition-transform hover:-translate-y-0.5"
@@ -289,14 +299,10 @@ function Dashboard() {
               <p className="mt-1.5 text-[11px] text-muted-foreground">
                 {c.employee.short_name} · {timeAgo(c.collection_date, TODAY)}
               </p>
-            </Link>
+            </AppLink>
           ))}
         </div>
       </Panel>
     </AppShell>
   );
-}
-
-function fmtShort(n: number) {
-  return fmtShortSom(n).replace(" so'm", "");
 }
