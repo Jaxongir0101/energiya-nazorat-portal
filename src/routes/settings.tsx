@@ -32,7 +32,7 @@ function SettingsPage() {
     <AppShell
       title="Sozlamalar"
       subtitle="Tizim parametrlari va tadbir ma'lumotlari"
-      crumbs={[{ label: "Dashboard", to: "/" }, { label: "Sozlamalar" }]}
+      crumbs={[{ label: "Sozlamalar" }]}
     >
       <Panel title="Tadbir parametrlari">
         <dl className="grid grid-cols-2 gap-3 text-[13px] md:grid-cols-4">

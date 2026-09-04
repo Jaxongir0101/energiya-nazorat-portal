@@ -124,7 +124,6 @@ function EmployeeDetail() {
       title={employee.full_name}
       subtitle={`${ROLE_LABEL[employee.role]} · ${territory.name} · ${employee.phone} · ${list.length} ta korxona`}
       crumbs={[
-        { label: "Dashboard", to: "/" },
         { label: "Mas'ullar", to: "/employees" },
         { label: employee.short_name },
       ]}

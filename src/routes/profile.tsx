@@ -31,7 +31,7 @@ function ProfilePage() {
     <AppShell
       title={currentUser.full_name}
       subtitle={`${ROLE_LABEL[currentUser.role]} · ${currentUser.position}`}
-      crumbs={[{ label: "Dashboard", to: "/" }, { label: "Profil" }]}
+      crumbs={[{ label: "Profil" }]}
     >
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <section className="card-surface p-5">

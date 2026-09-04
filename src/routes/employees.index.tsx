@@ -108,7 +108,7 @@ function EmployeesPage() {
     <AppShell
       title="Mas'ullar"
       subtitle={`${stats.length} ta mas'ul xodim · jami undirildi ${fmtSom(t.collected)}`}
-      crumbs={[{ label: "Dashboard", to: "/" }, { label: "Mas'ullar" }]}
+      crumbs={[{ label: "Mas'ullar" }]}
       actions={
         <ExportMenu
           payload={() => ({

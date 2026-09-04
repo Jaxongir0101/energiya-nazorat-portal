@@ -27,7 +27,7 @@ export function KpiCard({
       <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
       <p
         className={cn(
-          "mt-2 font-mono text-[26px] font-semibold leading-none tracking-tight tnum",
+          "mt-2 whitespace-nowrap font-mono text-[22px] font-semibold leading-none tracking-tight tnum",
           tone === "accent" && "text-accent",
           tone === "deep" && "text-brand-deep",
         )}

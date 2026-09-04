@@ -99,7 +99,7 @@ function UsersPage() {
     <AppShell
       title="Foydalanuvchilar"
       subtitle={`${all.length} ta foydalanuvchi · rollar va audit tarixi`}
-      crumbs={[{ label: "Dashboard", to: "/" }, { label: "Foydalanuvchilar" }]}
+      crumbs={[{ label: "Foydalanuvchilar" }]}
     >
       {role !== "super_admin" && (
         <p className="rounded-lg bg-muted px-4 py-2.5 text-[12px] text-muted-foreground">

@@ -254,7 +254,7 @@ function ReportsPage() {
     <AppShell
       title="Hisobotlar"
       subtitle="Filtrlar asosida rasmiy hisobotlarni shakllantiring va yuklab oling"
-      crumbs={[{ label: "Dashboard", to: "/" }, { label: "Hisobotlar" }]}
+      crumbs={[{ label: "Hisobotlar" }]}
       actions={generated ? <ExportMenu payload={payload} /> : undefined}
     >
       <div className="no-print grid grid-cols-2 gap-2 md:grid-cols-4 xl:grid-cols-7">
@@ -569,7 +569,7 @@ function ReportTable({
                 key={j}
                 className={cn(
                   "px-3 py-2",
-                  j >= numericFrom ? "text-right font-mono tnum" : "",
+                  j >= numericFrom ? "whitespace-nowrap text-right font-mono tnum" : "",
                   j === 0 ? "font-medium" : "",
                 )}
               >

@@ -138,7 +138,7 @@ function DebtorsPage() {
     <AppShell
       title="Qarzdorlar"
       subtitle={`${data.length} ta korxona · jami ${fmtSom(t.initial)} · qoldiq ${fmtSom(t.remaining)}`}
-      crumbs={[{ label: "Dashboard", to: "/" }, { label: "Qarzdorlar" }]}
+      crumbs={[{ label: "Qarzdorlar" }]}
       actions={
         <div className="flex items-center gap-2">
           <ExportMenu

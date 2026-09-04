@@ -148,7 +148,7 @@ function CollectionsPage() {
           <span className="font-mono">{fmtSom(todayTotal)}</span>
         </span>
       }
-      crumbs={[{ label: "Dashboard", to: "/" }, { label: "Undirishlar" }]}
+      crumbs={[{ label: "Undirishlar" }]}
       actions={
         <div className="flex items-center gap-2">
           <ExportMenu
